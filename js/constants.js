@@ -1,5 +1,5 @@
 export const STORAGE_KEY = "uni-chance-data";
-export const STORAGE_VERSION = 4;
+export const STORAGE_VERSION = 5;
 
 export const SCORE_RANGES = [
   { label: "396+", min: 396, max: Infinity },

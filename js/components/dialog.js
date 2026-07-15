@@ -1,4 +1,4 @@
-import { save, state, moveSpecialty } from "../state.js";
+import { save, profile, moveSpecialty } from "../state.js";
 
 export function bindFacultyEvents(fCard, faculty, onRender) {
   fCard.querySelector(".faculty-name").addEventListener("input", e => {
@@ -43,7 +43,7 @@ export function bindCardEvents(card, sp, faculty, onRender) {
   card.querySelector(".is-applied").addEventListener("change", e => {
     sp.isApplied = e.target.checked;
     if (sp.isApplied) {
-      for (const f of state.faculties) {
+      for (const f of profile.faculties) {
         for (const s of f.specialties) {
           if (s.id !== sp.id) s.isApplied = false;
         }

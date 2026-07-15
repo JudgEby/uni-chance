@@ -1,5 +1,5 @@
 import { SCORE_RANGES } from "../constants.js";
-import { state } from "../state.js";
+import { profile } from "../state.js";
 import { calcProbability, calcMigrationDist, calcWorstCaseMigrationDist, calcAppsTotal } from "../calc.js";
 import { probabilityColor, statusLabel } from "../utils/ui.js";
 
@@ -79,7 +79,8 @@ function renderMoveDropdown(card, sp, faculty, allFaculties) {
 }
 
 function hasAnyApplied() {
-  for (const f of state.faculties) {
+  if (!profile) return false;
+  for (const f of profile.faculties) {
     for (const s of f.specialties) {
       if (s.isApplied) return true;
     }
@@ -89,7 +90,7 @@ function hasAnyApplied() {
 
 function renderCardResult(card, sp, faculty) {
   const container = card.querySelector(".specialty-result");
-  if (state.userScore <= 0) {
+  if (!profile || profile.userScore <= 0) {
     container.innerHTML = '<span style="color:var(--text-secondary);font-size:0.82rem;">Введите балл для расчёта</span>';
     return;
   }
@@ -97,23 +98,23 @@ function renderCardResult(card, sp, faculty) {
   const anyApplied = hasAnyApplied();
   const virtualUser = anyApplied && !sp.isApplied;
 
-  const base = calcProbability(sp, state.userScore, undefined, virtualUser);
+  const base = calcProbability(sp, profile.userScore, undefined, virtualUser);
   if (!base) {
     container.innerHTML = '';
     return;
   }
 
   let extraDist = null;
-  if (state.migrationPercent > 0) {
-    if (state.scenario === "worst") {
-      extraDist = calcWorstCaseMigrationDist(sp, faculty.specialties, state.migrationPercent);
-    } else if (state.scenario === "current") {
-      extraDist = calcMigrationDist(sp, faculty.specialties, state.migrationPercent);
+  if (profile.migrationPercent > 0) {
+    if (profile.scenario === "worst") {
+      extraDist = calcWorstCaseMigrationDist(sp, faculty.specialties, profile.migrationPercent);
+    } else if (profile.scenario === "current") {
+      extraDist = calcMigrationDist(sp, faculty.specialties, profile.migrationPercent);
     }
   }
 
   const result = extraDist
-    ? calcProbability(sp, state.userScore, extraDist, virtualUser)
+    ? calcProbability(sp, profile.userScore, extraDist, virtualUser)
     : base;
   const migratedCount = extraDist ? extraDist.reduce((a, b) => a + b, 0) : 0;
 

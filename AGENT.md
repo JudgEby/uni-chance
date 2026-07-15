@@ -20,12 +20,13 @@ uni-chance/
 ├── css/
 │   ├── variables.css       # CSS-переменные :root
 │   ├── base.css            # Сброс, body, container, dialog
-│   ├── components.css      # Кнопки, инпуты, чекбоксы, слайдер, io-кнопки
+│   ├── components.css      # Кнопки, инпуты, чекбоксы, слайдер, io-кнопки, вкладки
 │   ├── cards.css           # Карточки факультетов/специальностей, результаты, миграция
-│   └── responsive.css      # Адаптивность @media (max-width: 640px)
+│   ├── responsive.css      # Адаптивность @media (max-width: 640px)
+│   └── skeleton.css        # Скелетон загрузки
 ├── js/
-│   ├── main.js             # Точка входа: init(), подключение обработчиков
-│   ├── state.js            # state, save(), load(), loadFromObject(), миграции, idCounter, moveSpecialty()
+│   ├── main.js             # Точка входа: init(), renderTabs(), подключение обработчиков
+│   ├── state.js            # state, profile, save(), load(), loadFromObject(), миграции, addProfile(), removeProfile(), renameProfile()
 │   ├── constants.js        # SCORE_RANGES, STORAGE_VERSION, newFaculty(), newSpecialty()
 │   ├── calc.js             # calcProbability, calcCompetitivePlaces, calcMigrationDist
 │   ├── io.js               # exportData(), importData() — экспорт/импорт в JSON-файл
@@ -50,13 +51,14 @@ uni-chance/
 ### State-driven рендеринг
 
 ```
-state (объект) → render() → DOM
-     ↑                        |
-     └──── save() ← localStorage
+state (объект) → profile (активный профиль) → render() → DOM
+      ↑                                          |
+      └──── save() ← localStorage
 ```
 
-- `state` — единственный источник правды (userScore, faculties[], migrationPercent, scenario)
-- `render()` вызывается при любом изменении state
+- `state` — корневой объект (profiles[], activeProfileId, profileIdCounter)
+- `profile` — ссылка на активный профиль (экспортируется из state.js)
+- `render()` вызывается при любом изменении state/profile
 - `save()` сериализует state в localStorage (ключ `uni-chance-data`)
 - `load()` восстанавливает state из localStorage при инициализации
 
@@ -72,28 +74,34 @@ state (объект) → render() → DOM
 
 ```
 state
-├── userScore: number
-├── migrationPercent: number (общий ползунок)
-├── scenario: "current" | "best" | "worst"
-└── faculties: Faculty[]
-    ├── id: number
-    ├── name: string
-    ├── collapsed: boolean
-    └── specialties: Specialty[]
-        ├── id: number
-        ├── name: string
-        ├── isTarget: boolean (Моя — по одной на факультет)
-        ├── isApplied: boolean (Подал сюда — одна на все факультеты)
-        ├── plan: number (конкурсные места)
-        └── scoreDist: number[57]
+├── profiles: Profile[]
+│   ├── id: number
+│   ├── name: string
+│   ├── userScore: number
+│   ├── migrationPercent: number (общий ползунок)
+│   ├── scenario: "current" | "best" | "worst"
+│   ├── idCounter: number (для факультетов/специальностей)
+│   └── faculties: Faculty[]
+│       ├── id: number
+│       ├── name: string
+│       ├── collapsed: boolean
+│       └── specialties: Specialty[]
+│           ├── id: number
+│           ├── name: string
+│           ├── isTarget: boolean (Моя — по одной на факультет)
+│           ├── isApplied: boolean (Подал сюда — одна на все факультеты)
+│           ├── plan: number (конкурсные места)
+│           └── scoreDist: number[57]
+├── activeProfileId: number
+└── profileIdCounter: number
 ```
 
 ### Карта модулей
 
 | Модуль | Назначение |
 |--------|-----------|
-| `js/main.js` | Точка входа, init(), привязка глобальных обработчиков |
-| `js/state.js` | Объект state, save(), load(), loadFromObject(), миграции, moveSpecialty(), findFaculty() |
+| `js/main.js` | Точка входа, init(), renderTabs(), привязка обработчиков вкладок и UI |
+| `js/state.js` | Объект state, profile (активный профиль), save(), load(), loadFromObject(), миграции, addProfile(), removeProfile(), renameProfile(), switchProfile(), moveSpecialty(), findFaculty() |
 | `js/constants.js` | SCORE_RANGES (57 диапазонов), STORAGE_VERSION, newFaculty(), newSpecialty() |
 | `js/calc.js` | calcProbability(), calcCompetitivePlaces(), calcMigrationDist(), calcAppsTotal() |
 | `js/io.js` | exportData() — скачивание JSON-файла, importData() — загрузка и миграция |
@@ -143,6 +151,7 @@ state
 - v2: иерархическая структура `faculties[].specialties[]`
 - v3: добавлено поле `isApplied` (Подал сюда) в специальности
 - v4: упрощена структура специальности — только `plan` (конкурсные места), `appsTotal` вычисляется как `sum(scoreDist)`
+- v5: мульти-профиль — `state.profiles[]`, каждый профиль хранит свои данные (userScore, faculties, migrationPercent, scenario, idCounter)
 
 Версия формата хранится в поле `version` объекта localStorage.
 
@@ -157,8 +166,8 @@ state
 
 ## Как вносить изменения
 
-1. Определите, какое состояние меняется (state-свойство)
-2. Если добавляется новое поле — обновите конструктор в `constants.js`, шаблон в HTML, `syncCardToState()` в `components/specialty.js`, обработчики в `components/dialog.js`, `save()`/`load()`/`loadFromObject()` в `state.js`
+1. Определите, какое состояние меняется (state-свойство или profile-свойство)
+2. Если добавляется новое поле профиля — обновите конструктор в `constants.js`, миграцию в `state.js`, `loadFromObject()`, шаблон в HTML, `syncCardToState()` в `components/specialty.js`, обработчики в `components/dialog.js`
 3. Если меняется логика расчёта — работайте с `calcProbability()` или `calcMigrationDist()` в `calc.js`
 4. Если добавляется новый UI-элемент — добавьте в `index.html`, стилизуйте в соответствующем CSS-файле, привяжите обработчик в `components/`
 5. Если нужна новая миграция — добавьте функцию в реестр `MIGRATIONS` в `state.js` и обновите `STORAGE_VERSION` в `constants.js`

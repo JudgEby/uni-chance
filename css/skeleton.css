@@ -1,0 +1,306 @@
+.skeleton-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  transition: opacity 0.3s ease;
+}
+
+.skeleton-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skeleton-content {
+  max-width: 960px;
+  width: 100%;
+}
+
+.skeleton-block {
+  background: var(--border);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Header */
+.skel-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.skel-header-title {
+  height: 32px;
+  width: 260px;
+  margin: 0 auto 10px;
+}
+
+.skel-header-sub {
+  height: 16px;
+  width: 380px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.skel-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.skel-tab {
+  height: 38px;
+  width: 100px;
+  border-radius: 8px;
+}
+
+.skel-tab-add {
+  height: 38px;
+  width: 38px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* Score input card */
+.skel-score-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.skel-score-label {
+  height: 12px;
+  width: 80px;
+  margin: 0 auto 10px;
+}
+
+.skel-score-input {
+  height: 56px;
+  width: 140px;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+/* Faculty cards */
+.skel-faculty-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.skel-faculty-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.skel-faculty-icon {
+  height: 20px;
+  width: 20px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.skel-faculty-name {
+  height: 20px;
+  flex: 1;
+  max-width: 250px;
+}
+
+.skel-faculty-btn {
+  height: 28px;
+  width: 80px;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.skel-specialty-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.skel-specialty-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.skel-specialty-name {
+  height: 20px;
+  width: 200px;
+}
+
+.skel-specialty-chip {
+  height: 24px;
+  width: 50px;
+  border-radius: 6px;
+}
+
+.skel-field-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.skel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skel-field-label {
+  height: 10px;
+  width: 70px;
+}
+
+.skel-field-input {
+  height: 30px;
+  width: 70px;
+}
+
+/* Migration card */
+.skel-migration-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.skel-migration-title {
+  height: 22px;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+.skel-migration-desc {
+  height: 14px;
+  width: 320px;
+  margin-bottom: 14px;
+}
+
+.skel-migration-slider {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.skel-slider-track {
+  height: 6px;
+  flex: 1;
+  border-radius: 3px;
+}
+
+.skel-slider-val {
+  height: 18px;
+  width: 40px;
+  border-radius: 6px;
+}
+
+.skel-migration-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.skel-migration-btn {
+  height: 34px;
+  flex: 1;
+  border-radius: 8px;
+}
+
+/* Results section */
+.skel-results-title {
+  height: 22px;
+  width: 120px;
+  margin-bottom: 12px;
+}
+
+.skel-result-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.skel-result-percent {
+  height: 36px;
+  width: 80px;
+  border-radius: 8px;
+}
+
+.skel-result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skel-result-name {
+  height: 16px;
+  width: 160px;
+}
+
+.skel-result-meta {
+  height: 12px;
+  width: 220px;
+}
+
+@media (max-width: 640px) {
+  .skel-header-sub { width: 100%; }
+  .skel-specialty-name { width: 100%; }
+  .skel-specialty-row { flex-direction: column; align-items: stretch; gap: 8px; }
+  .skel-specialty-chip { width: 60px; }
+  .skel-migration-btn { min-height: 34px; }
+  .skel-result-percent { min-width: 60px; }
+  .skel-result-name { width: 120px; }
+  .skel-result-meta { width: 160px; }
+}
+
+/* Section header */
+.skel-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skel-section-title {
+  height: 22px;
+  width: 140px;
+}
+
+.skel-section-btn {
+  height: 32px;
+  width: 120px;
+  border-radius: 8px;
+}

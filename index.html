@@ -10,9 +10,94 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/cards.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/skeleton.css">
 </head>
 <body>
-  <div class="container">
+  <div class="skeleton-overlay" id="skeletonOverlay">
+    <div class="skeleton-content">
+      <div class="skel-header">
+        <div class="skeleton-block skel-header-title"></div>
+        <div class="skeleton-block skel-header-sub"></div>
+      </div>
+
+      <div class="skel-tabs">
+        <div class="skeleton-block skel-tab"></div>
+        <div class="skeleton-block skel-tab"></div>
+        <div class="skeleton-block skel-tab-add"></div>
+      </div>
+
+      <div class="skel-score-card">
+        <div class="skeleton-block skel-score-label"></div>
+        <div class="skeleton-block skel-score-input"></div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div class="skel-section-header">
+          <div class="skeleton-block skel-section-title"></div>
+          <div class="skeleton-block skel-section-btn"></div>
+        </div>
+      </div>
+
+      <div class="skel-faculty-card">
+        <div class="skel-faculty-header">
+          <div class="skeleton-block skel-faculty-icon"></div>
+          <div class="skeleton-block skel-faculty-name"></div>
+          <div class="skeleton-block skel-faculty-btn"></div>
+        </div>
+        <div class="skel-specialty-card">
+          <div class="skel-specialty-row">
+            <div class="skeleton-block skel-specialty-name"></div>
+            <div class="skeleton-block skel-specialty-chip"></div>
+            <div class="skeleton-block skel-specialty-chip"></div>
+          </div>
+          <div class="skel-field-row">
+            <div class="skel-field">
+              <div class="skeleton-block skel-field-label"></div>
+              <div class="skeleton-block skel-field-input"></div>
+            </div>
+            <div class="skel-field">
+              <div class="skeleton-block skel-field-label"></div>
+              <div class="skeleton-block skel-field-input"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skel-migration-card">
+        <div class="skeleton-block skel-migration-title"></div>
+        <div class="skeleton-block skel-migration-desc"></div>
+        <div class="skel-migration-slider">
+          <div class="skeleton-block skel-slider-track"></div>
+          <div class="skeleton-block skel-slider-val"></div>
+        </div>
+        <div class="skel-migration-buttons">
+          <div class="skeleton-block skel-migration-btn"></div>
+          <div class="skeleton-block skel-migration-btn"></div>
+          <div class="skeleton-block skel-migration-btn"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div class="skeleton-block skel-results-title"></div>
+      </div>
+      <div class="skel-result-card">
+        <div class="skeleton-block skel-result-percent"></div>
+        <div class="skel-result-info">
+          <div class="skeleton-block skel-result-name"></div>
+          <div class="skeleton-block skel-result-meta"></div>
+        </div>
+      </div>
+      <div class="skel-result-card">
+        <div class="skeleton-block skel-result-percent"></div>
+        <div class="skel-result-info">
+          <div class="skeleton-block skel-result-name"></div>
+          <div class="skeleton-block skel-result-meta"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="appContainer" style="display:none">
     <header class="header">
       <h1>Шансы поступления</h1>
       <p class="subtitle">Расчёт вероятности поступления на основе данных о поданных заявлениях</p>
@@ -22,6 +107,8 @@
         <input type="file" id="fileInput" accept=".json" style="display:none;">
       </div>
     </header>
+
+    <div class="tabs-bar" id="tabsBar"></div>
 
     <section class="card score-input-card">
       <label for="userScore" class="label">Твой балл</label>
@@ -54,7 +141,7 @@
       <h2>Результаты</h2>
       <div id="resultsList" class="results-list"></div>
     </section>
-  </div>
+  </div><!-- end #appContainer -->
 
   <template id="facultyTemplate">
     <div class="card faculty-card" data-faculty-id="">

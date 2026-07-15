@@ -38,4 +38,22 @@
     right: auto;
     left: 0;
   }
+  .tabs-bar {
+    margin-bottom: 12px;
+  }
+  .tab {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  .tab-delete,
+  .tab-edit {
+    display: flex;
+  }
+}
+
+@media (hover: none) {
+  .tab-delete,
+  .tab-edit {
+    display: flex;
+  }
 }

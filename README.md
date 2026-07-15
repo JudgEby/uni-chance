@@ -39,6 +39,7 @@ Start-Process "http://localhost:8000/"
 
 ## Функциональность
 
+- **Мульти-профиль** — вкладки для нескольких людей, каждый со своими данными. Клик — переключение, двойной клик — переименование, × — удаление
 - **Ввод балла** — ЕГЭ-балл абитуриента (макс. 400)
 - **Факультеты** —группировка специальностей по факультетам с аккордеоном
 - **Специальности** — добавление направлений внутри факультета с параметрами:
@@ -62,12 +63,13 @@ uni-chance/
 ├── css/
 │   ├── variables.css       # CSS-переменные :root
 │   ├── base.css            # Сброс, layout, dialog
-│   ├── components.css      # Кнопки, инпуты, слайдер
+│   ├── components.css      # Кнопки, инпуты, слайдер, вкладки
 │   ├── cards.css           # Карточки факультетов/специальностей, результаты
-│   └── responsive.css      # Адаптивность @media (max-width: 640px)
+│   ├── responsive.css      # Адаптивность @media (max-width: 640px)
+│   └── skeleton.css        # Скелетон загрузки
 ├── js/
-│   ├── main.js             # Точка входа, init()
-│   ├── state.js            # State, save(), load(), loadFromObject(), миграции
+│   ├── main.js             # Точка входа, init(), renderTabs()
+│   ├── state.js            # State, profile, save(), load(), loadFromObject(), миграции, addProfile(), removeProfile()
 │   ├── constants.js        # SCORE_RANGES, newFaculty(), newSpecialty()
 │   ├── calc.js             # calcProbability(), calcMigrationDist()
 │   ├── io.js               # exportData(), importData()

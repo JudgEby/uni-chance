@@ -1,4 +1,4 @@
-import { state, save, incrementIdCounter } from "./state.js";
+import { profile, save, incrementIdCounter } from "./state.js";
 import { syncCardToState } from "./components/specialty.js";
 import { bindCardEvents, bindFacultyEvents } from "./components/dialog.js";
 import { renderResults } from "./components/results.js";
@@ -16,13 +16,13 @@ function renderFaculties() {
 
   const existingFacultyIds = new Set();
   list.querySelectorAll(".faculty-card").forEach(el => existingFacultyIds.add(Number(el.dataset.facultyId)));
-  const stateFacultyIds = new Set(state.faculties.map(f => f.id));
+  const stateFacultyIds = new Set((profile ? profile.faculties : []).map(f => f.id));
 
   list.querySelectorAll(".faculty-card").forEach(el => {
     if (!stateFacultyIds.has(Number(el.dataset.facultyId))) el.remove();
   });
 
-  for (const faculty of state.faculties) {
+  for (const faculty of (profile ? profile.faculties : [])) {
     let fCard = list.querySelector(`.faculty-card[data-faculty-id="${faculty.id}"]`);
     if (!fCard) {
       fCard = fTemplate.content.firstElementChild.cloneNode(true);
@@ -56,7 +56,7 @@ function renderFaculties() {
         specContainer.appendChild(sCard);
         bindCardEvents(sCard, sp, faculty, render);
       }
-      syncCardToState(sCard, sp, faculty, state.faculties);
+      syncCardToState(sCard, sp, faculty, profile.faculties);
     }
 
     const addBtn = fCard.querySelector(".btn-add-specialty");
@@ -64,7 +64,7 @@ function renderFaculties() {
       addBtn.dataset.bound = "1";
       addBtn.addEventListener("click", () => {
         const spId = incrementIdCounter();
-        const sp = { id: spId, name: "", isTarget: false, isApplied: false, plan: 0, planTarget: 0, planPaid: 0, appsTotal: 0, appsTarget: 0, appsNoExam: 0, appsOutOfComp: 0, appsByComp: 0, scoreDist: new Array(57).fill(0) };
+        const sp = { id: spId, name: "", isTarget: false, isApplied: false, plan: 0, scoreDist: new Array(57).fill(0) };
         faculty.specialties.push(sp);
         render();
       });

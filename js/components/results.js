@@ -1,17 +1,17 @@
-import { state } from "../state.js";
+import { profile } from "../state.js";
 import { calcProbability, calcMigrationDist, calcWorstCaseMigrationDist } from "../calc.js";
 import { probabilityColor, statusLabel } from "../utils/ui.js";
 import { esc } from "../utils/dom.js";
 
 export function renderResults() {
   const list = document.getElementById("resultsList");
-  if (state.userScore <= 0 || state.faculties.length === 0) {
+  if (!profile || profile.userScore <= 0 || profile.faculties.length === 0) {
     list.innerHTML = '<div class="no-results">Добавь факультеты и специальности, введи балл</div>';
     return;
   }
 
   let anyApplied = false;
-  for (const f of state.faculties) {
+  for (const f of profile.faculties) {
     for (const s of f.specialties) {
       if (s.isApplied) { anyApplied = true; break; }
     }
@@ -21,7 +21,7 @@ export function renderResults() {
   let html = "";
   let hasAny = false;
 
-  for (const faculty of state.faculties) {
+  for (const faculty of profile.faculties) {
     if (faculty.specialties.length === 0) continue;
 
     let facultyHtml = "";
@@ -30,20 +30,20 @@ export function renderResults() {
     for (const sp of faculty.specialties) {
       const virtualUser = anyApplied && !sp.isApplied;
 
-      const base = calcProbability(sp, state.userScore, undefined, virtualUser);
+      const base = calcProbability(sp, profile.userScore, undefined, virtualUser);
       if (!base) continue;
 
       let extraDist = null;
-      if (state.migrationPercent > 0) {
-        if (state.scenario === "worst") {
-          extraDist = calcWorstCaseMigrationDist(sp, faculty.specialties, state.migrationPercent);
-        } else if (state.scenario === "current") {
-          extraDist = calcMigrationDist(sp, faculty.specialties, state.migrationPercent);
+      if (profile.migrationPercent > 0) {
+        if (profile.scenario === "worst") {
+          extraDist = calcWorstCaseMigrationDist(sp, faculty.specialties, profile.migrationPercent);
+        } else if (profile.scenario === "current") {
+          extraDist = calcMigrationDist(sp, faculty.specialties, profile.migrationPercent);
         }
       }
 
       const result = extraDist
-        ? calcProbability(sp, state.userScore, extraDist, virtualUser)
+        ? calcProbability(sp, profile.userScore, extraDist, virtualUser)
         : base;
 
       const color = probabilityColor(result.prob);
