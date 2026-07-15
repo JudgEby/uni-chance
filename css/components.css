@@ -80,6 +80,34 @@
   accent-color: var(--accent);
 }
 
+.applied-checkbox {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--green);
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.applied-checkbox.visible {
+  display: flex;
+}
+
+.applied-checkbox:has(input:checked) {
+  border-color: var(--green);
+  background: #e8fde8;
+}
+
+.applied-checkbox input {
+  accent-color: var(--green);
+}
+
 .btn-remove {
   margin-left: auto;
   width: 30px;

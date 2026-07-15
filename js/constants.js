@@ -1,5 +1,5 @@
 export const STORAGE_KEY = "uni-chance-data";
-export const STORAGE_VERSION = 2;
+export const STORAGE_VERSION = 4;
 
 export const SCORE_RANGES = [
   { label: "396+", min: 396, max: Infinity },
@@ -76,14 +76,8 @@ export function newSpecialty(idCounter) {
     id: ++idCounter,
     name: "",
     isTarget: false,
+    isApplied: false,
     plan: 0,
-    planTarget: 0,
-    planPaid: 0,
-    appsTotal: 0,
-    appsTarget: 0,
-    appsNoExam: 0,
-    appsOutOfComp: 0,
-    appsByComp: 0,
     scoreDist: new Array(57).fill(0)
   };
 }

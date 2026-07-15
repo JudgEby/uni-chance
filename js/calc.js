@@ -2,13 +2,23 @@ import { SCORE_RANGES } from "./constants.js";
 import { getRangeIndex } from "./utils/ui.js";
 
 export function calcCompetitivePlaces(sp) {
-  return Math.max(0, sp.plan - sp.planTarget - sp.appsNoExam - sp.appsOutOfComp);
+  return Math.max(0, sp.plan);
 }
 
-export function calcProbability(sp, userScore, extraDist) {
+export function calcAppsTotal(sp) {
+  return sp.scoreDist.reduce((a, b) => a + b, 0);
+}
+
+export function calcProbability(sp, userScore, extraDist, virtualUser) {
   if (!userScore || userScore <= 0) return null;
 
-  const dist = extraDist ? sp.scoreDist.map((v, i) => v + (extraDist[i] || 0)) : [...sp.scoreDist];
+  let dist = [...sp.scoreDist];
+  if (virtualUser) {
+    dist[getRangeIndex(userScore)] += 1;
+  }
+  if (extraDist) {
+    dist = dist.map((v, i) => v + (extraDist[i] || 0));
+  }
   const competitive = calcCompetitivePlaces(sp);
   const userRangeIdx = getRangeIndex(userScore);
 

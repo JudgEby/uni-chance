@@ -64,7 +64,7 @@ function renderFaculties() {
       addBtn.dataset.bound = "1";
       addBtn.addEventListener("click", () => {
         const spId = incrementIdCounter();
-        const sp = { id: spId, name: "", isTarget: false, plan: 0, planTarget: 0, planPaid: 0, appsTotal: 0, appsTarget: 0, appsNoExam: 0, appsOutOfComp: 0, appsByComp: 0, scoreDist: new Array(57).fill(0) };
+        const sp = { id: spId, name: "", isTarget: false, isApplied: false, plan: 0, planTarget: 0, planPaid: 0, appsTotal: 0, appsTarget: 0, appsNoExam: 0, appsOutOfComp: 0, appsByComp: 0, scoreDist: new Array(57).fill(0) };
         faculty.specialties.push(sp);
         render();
       });

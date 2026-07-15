@@ -84,6 +84,9 @@
           <label class="target-checkbox">
             <input type="checkbox" class="is-target"> Моя
           </label>
+          <label class="applied-checkbox">
+            <input type="checkbox" class="is-applied"> Подал сюда
+          </label>
           <div class="specialty-actions">
             <div class="move-wrapper">
               <button class="btn btn-small btn-move" title="Перенести">Перенести</button>
@@ -99,42 +102,17 @@
           <h3>План приёма</h3>
           <div class="fields-row">
             <div class="field">
-              <label>Бюджет (всего)</label>
+              <label>Конкурсные места</label>
               <input type="number" class="input field-plan" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>Целевики (в плане)</label>
-              <input type="number" class="input field-planTarget" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>Платное</label>
-              <input type="number" class="input field-planPaid" min="0" value="0">
             </div>
           </div>
         </div>
 
         <div class="field-group">
-          <h3>Заявления</h3>
           <div class="fields-row">
-            <div class="field">
-              <label>Всего</label>
-              <input type="number" class="input field-appsTotal" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>Целевики</label>
-              <input type="number" class="input field-appsTarget" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>Без экзаменов</label>
-              <input type="number" class="input field-appsNoExam" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>Вне конкурса</label>
-              <input type="number" class="input field-appsOutOfComp" min="0" value="0">
-            </div>
-            <div class="field">
-              <label>По конкурсу</label>
-              <input type="number" class="input field-appsByComp" min="0" value="0">
+            <div class="field apps-total-display">
+              <span class="apps-total-label">Заявлено (из таблицы):</span>
+              <strong class="apps-total-value">0</strong>
             </div>
           </div>
         </div>

@@ -84,6 +84,30 @@ const MIGRATIONS = {
     d.faculties = faculties;
     d.version = 2;
     return d;
+  },
+  3(d) {
+    for (const f of (d.faculties || [])) {
+      for (const s of (f.specialties || [])) {
+        if (s.isApplied === undefined) s.isApplied = false;
+      }
+    }
+    d.version = 3;
+    return d;
+  },
+  4(d) {
+    for (const f of (d.faculties || [])) {
+      for (const s of (f.specialties || [])) {
+        delete s.planTarget;
+        delete s.planPaid;
+        delete s.appsTotal;
+        delete s.appsTarget;
+        delete s.appsNoExam;
+        delete s.appsOutOfComp;
+        delete s.appsByComp;
+      }
+    }
+    d.version = 4;
+    return d;
   }
 };
 

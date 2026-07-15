@@ -1,4 +1,4 @@
-import { save, moveSpecialty } from "../state.js";
+import { save, state, moveSpecialty } from "../state.js";
 
 export function bindFacultyEvents(fCard, faculty, onRender) {
   fCard.querySelector(".faculty-name").addEventListener("input", e => {
@@ -32,6 +32,22 @@ export function bindCardEvents(card, sp, faculty, onRender) {
     sp.isTarget = e.target.checked;
     if (sp.isTarget) {
       faculty.specialties.forEach(s => { if (s.id !== sp.id) s.isTarget = false; });
+    } else {
+      if (sp.isApplied) {
+        sp.isApplied = false;
+      }
+    }
+    onRender();
+  });
+
+  card.querySelector(".is-applied").addEventListener("change", e => {
+    sp.isApplied = e.target.checked;
+    if (sp.isApplied) {
+      for (const f of state.faculties) {
+        for (const s of f.specialties) {
+          if (s.id !== sp.id) s.isApplied = false;
+        }
+      }
     }
     onRender();
   });
@@ -45,14 +61,7 @@ export function bindCardEvents(card, sp, faculty, onRender) {
   });
 
   const fieldMap = {
-    ".field-plan": "plan",
-    ".field-planTarget": "planTarget",
-    ".field-planPaid": "planPaid",
-    ".field-appsTotal": "appsTotal",
-    ".field-appsTarget": "appsTarget",
-    ".field-appsNoExam": "appsNoExam",
-    ".field-appsOutOfComp": "appsOutOfComp",
-    ".field-appsByComp": "appsByComp"
+    ".field-plan": "plan"
   };
   Object.entries(fieldMap).forEach(([sel, key]) => {
     card.querySelector(sel).addEventListener("input", e => {

@@ -1,19 +1,24 @@
 import { SCORE_RANGES } from "../constants.js";
 import { state } from "../state.js";
-import { calcProbability, calcMigrationDist, calcWorstCaseMigrationDist } from "../calc.js";
+import { calcProbability, calcMigrationDist, calcWorstCaseMigrationDist, calcAppsTotal } from "../calc.js";
 import { probabilityColor, statusLabel } from "../utils/ui.js";
 
 export function syncCardToState(card, sp, faculty, allFaculties) {
   card.querySelector(".specialty-name").value = sp.name;
   card.querySelector(".is-target").checked = sp.isTarget;
+  card.querySelector(".is-applied").checked = sp.isApplied;
+
+  const appliedLabel = card.querySelector(".applied-checkbox");
+  if (sp.isTarget) {
+    appliedLabel.classList.add("visible");
+  } else {
+    appliedLabel.classList.remove("visible");
+  }
+
   card.querySelector(".field-plan").value = sp.plan || "";
-  card.querySelector(".field-planTarget").value = sp.planTarget || "";
-  card.querySelector(".field-planPaid").value = sp.planPaid || "";
-  card.querySelector(".field-appsTotal").value = sp.appsTotal || "";
-  card.querySelector(".field-appsTarget").value = sp.appsTarget || "";
-  card.querySelector(".field-appsNoExam").value = sp.appsNoExam || "";
-  card.querySelector(".field-appsOutOfComp").value = sp.appsOutOfComp || "";
-  card.querySelector(".field-appsByComp").value = sp.appsByComp || "";
+
+  const appsTotalEl = card.querySelector(".apps-total-value");
+  if (appsTotalEl) appsTotalEl.textContent = calcAppsTotal(sp);
 
   renderDistInputs(card, sp);
   renderCardResult(card, sp, faculty);
@@ -73,6 +78,15 @@ function renderMoveDropdown(card, sp, faculty, allFaculties) {
   ).join("");
 }
 
+function hasAnyApplied() {
+  for (const f of state.faculties) {
+    for (const s of f.specialties) {
+      if (s.isApplied) return true;
+    }
+  }
+  return false;
+}
+
 function renderCardResult(card, sp, faculty) {
   const container = card.querySelector(".specialty-result");
   if (state.userScore <= 0) {
@@ -80,7 +94,10 @@ function renderCardResult(card, sp, faculty) {
     return;
   }
 
-  const base = calcProbability(sp, state.userScore);
+  const anyApplied = hasAnyApplied();
+  const virtualUser = anyApplied && !sp.isApplied;
+
+  const base = calcProbability(sp, state.userScore, undefined, virtualUser);
   if (!base) {
     container.innerHTML = '';
     return;
@@ -98,7 +115,7 @@ function renderCardResult(card, sp, faculty) {
   let result = base;
   let migratedCount = 0;
   if (extraDist) {
-    result = calcProbability(sp, state.userScore, extraDist);
+    result = calcProbability(sp, state.userScore, extraDist, virtualUser);
     migratedCount = extraDist.reduce((a, b) => a + b, 0);
   }
 
@@ -116,6 +133,9 @@ function renderCardResult(card, sp, faculty) {
   html += ` · В твоём диапазоне: <strong>${result.peopleInRange}</strong>`;
   if (migratedCount > 0) {
     html += ` · Мигрирует: <strong>+${migratedCount}</strong>`;
+  }
+  if (virtualUser) {
+    html += ` · <em style="color:var(--green);">+1 виртуально ты</em>`;
   }
   html += `</div>`;
 

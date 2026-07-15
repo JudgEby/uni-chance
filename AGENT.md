@@ -2,7 +2,7 @@
 
 ## Обзор проекта
 
-Калькулятор вероятности поступления в вуз. Пользователь вводит свой балл, добавляет факультеты со специальностями, заполняет данные о плане приёма и заявлениях, а приложение рассчитывает процент шанса поступления. Данные сохраняются в браузере (localStorage).
+Калькулятор вероятности поступления в вуз. Пользователь вводит свой балл, добавляет факультеты со специальностями, заполняет данные о плане приёма и распределении баллов, а приложение рассчитывает процент шанса поступления. Данные сохраняются в браузере (localStorage).
 
 Приложение полностью статичное — никаких фреймворков или сборщиков. Используются нативные ES-модули (`type="module"`). Требуется локальный HTTP-сервер для запуска (ES-модули не работают с `file://` протоколом из-за CORS):
 
@@ -83,8 +83,8 @@ state
         ├── id: number
         ├── name: string
         ├── isTarget: boolean (Моя — по одной на факультет)
-        ├── plan, planTarget, planPaid: number
-        ├── appsTotal, appsTarget, appsNoExam, appsOutOfComp, appsByComp: number
+        ├── isApplied: boolean (Подал сюда — одна на все факультеты)
+        ├── plan: number (конкурсные места)
         └── scoreDist: number[57]
 ```
 
@@ -95,7 +95,7 @@ state
 | `js/main.js` | Точка входа, init(), привязка глобальных обработчиков |
 | `js/state.js` | Объект state, save(), load(), loadFromObject(), миграции, moveSpecialty(), findFaculty() |
 | `js/constants.js` | SCORE_RANGES (57 диапазонов), STORAGE_VERSION, newFaculty(), newSpecialty() |
-| `js/calc.js` | calcProbability(), calcCompetitivePlaces(), calcMigrationDist() |
+| `js/calc.js` | calcProbability(), calcCompetitivePlaces(), calcMigrationDist(), calcAppsTotal() |
 | `js/io.js` | exportData() — скачивание JSON-файла, importData() — загрузка и миграция |
 | `js/render.js` | render(), renderFaculties() |
 | `js/utils/dom.js` | esc() — XSS-защита |
@@ -141,6 +141,8 @@ state
 История версий:
 - v1: плоский массив `specialties[]` с полем `faculty`
 - v2: иерархическая структура `faculties[].specialties[]`
+- v3: добавлено поле `isApplied` (Подал сюда) в специальности
+- v4: упрощена структура специальности — только `plan` (конкурсные места), `appsTotal` вычисляется как `sum(scoreDist)`
 
 Версия формата хранится в поле `version` объекта localStorage.
 
