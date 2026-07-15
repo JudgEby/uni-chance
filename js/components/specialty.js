@@ -112,12 +112,10 @@ function renderCardResult(card, sp, faculty) {
     }
   }
 
-  let result = base;
-  let migratedCount = 0;
-  if (extraDist) {
-    result = calcProbability(sp, state.userScore, extraDist, virtualUser);
-    migratedCount = extraDist.reduce((a, b) => a + b, 0);
-  }
+  const result = extraDist
+    ? calcProbability(sp, state.userScore, extraDist, virtualUser)
+    : base;
+  const migratedCount = extraDist ? extraDist.reduce((a, b) => a + b, 0) : 0;
 
   const color = probabilityColor(result.prob);
   const cls = result.status === "ok" ? "probable" : result.status === "boundary" ? "boundary" : "unlikely";
@@ -126,6 +124,12 @@ function renderCardResult(card, sp, faculty) {
     <span style="font-size:1.4rem;font-weight:800;color:${color};">${result.prob}%</span>
     <span>${statusLabel(result.status)}</span>
   </div>`;
+
+  if (result.baseProb != null && result.baseProb !== result.prob) {
+    const arrow = result.prob < result.baseProb ? "↓" : result.prob > result.baseProb ? "↑" : "→";
+    const diffColor = result.prob < result.baseProb ? "#c62828" : result.prob > result.baseProb ? "#1a7f37" : "#888";
+    html += `<div class="migration-comparison" style="color:${diffColor};">Без миграции: <strong>${result.baseProb}%</strong> → ${result.prob}% ${arrow}</div>`;
+  }
 
   html += `<div class="result-details">`;
   html += `Конкурсных мест: <strong>${result.competitive}</strong>`;

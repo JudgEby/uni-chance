@@ -9,9 +9,7 @@ export function calcAppsTotal(sp) {
   return sp.scoreDist.reduce((a, b) => a + b, 0);
 }
 
-export function calcProbability(sp, userScore, extraDist, virtualUser) {
-  if (!userScore || userScore <= 0) return null;
-
+function computeCalc(sp, userScore, extraDist, virtualUser) {
   let dist = [...sp.scoreDist];
   if (virtualUser) {
     dist[getRangeIndex(userScore)] += 1;
@@ -27,14 +25,8 @@ export function calcProbability(sp, userScore, extraDist, virtualUser) {
   const peopleInRange = dist[userRangeIdx];
 
   if (competitive <= 0) return { prob: 0, competitive, peopleAbove, peopleInRange, status: "none" };
-
-  if (peopleAbove >= competitive) {
-    return { prob: 0, competitive, peopleAbove, peopleInRange, status: "fail" };
-  }
-
-  if (peopleAbove + peopleInRange <= competitive) {
-    return { prob: 100, competitive, peopleAbove, peopleInRange, status: "ok" };
-  }
+  if (peopleAbove >= competitive) return { prob: 0, competitive, peopleAbove, peopleInRange, status: "fail" };
+  if (peopleAbove + peopleInRange <= competitive) return { prob: 100, competitive, peopleAbove, peopleInRange, status: "ok" };
 
   const remaining = competitive - peopleAbove;
   const range = SCORE_RANGES[userRangeIdx];
@@ -47,11 +39,24 @@ export function calcProbability(sp, userScore, extraDist, virtualUser) {
     positionFactor = (userScore - range.min) / (range.max - range.min);
   }
 
-  const baseProb = remaining / peopleInRange;
-  const adjustedProb = baseProb * (1 - positionFactor * 0.4);
+  const fraction = remaining / peopleInRange;
+  const adjustedProb = fraction * (1 - positionFactor * 0.4);
   const prob = Math.max(0, Math.min(100, Math.round(adjustedProb * 100)));
 
   return { prob, competitive, peopleAbove, peopleInRange, status: "boundary" };
+}
+
+export function calcProbability(sp, userScore, extraDist, virtualUser) {
+  if (!userScore || userScore <= 0) return null;
+
+  const result = computeCalc(sp, userScore, extraDist, virtualUser);
+
+  if (extraDist) {
+    const baseResult = computeCalc(sp, userScore, null, virtualUser);
+    result.baseProb = baseResult.prob;
+  }
+
+  return result;
 }
 
 export function calcMigrationDist(targetSp, facultySpecialties, migrationPercent) {

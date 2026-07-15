@@ -42,18 +42,27 @@ export function renderResults() {
         }
       }
 
-      let result = base;
-      if (extraDist) result = calcProbability(sp, state.userScore, extraDist, virtualUser);
+      const result = extraDist
+        ? calcProbability(sp, state.userScore, extraDist, virtualUser)
+        : base;
 
       const color = probabilityColor(result.prob);
       const targetTag = sp.isTarget ? ' <span style="color:var(--accent);font-size:0.75rem;font-weight:600;">&#9733; МОЯ</span>' : "";
       const appliedTag = sp.isApplied ? ' <span style="color:var(--green);font-size:0.75rem;font-weight:600;">&#10003; ПОДАЛ</span>' : "";
+
+      let comparisonLine = "";
+      if (result.baseProb != null && result.baseProb !== result.prob) {
+        const arrow = result.prob < result.baseProb ? "↓" : result.prob > result.baseProb ? "↑" : "→";
+        const diffColor = result.prob < result.baseProb ? "#c62828" : result.prob > result.baseProb ? "#1a7f37" : "#888";
+        comparisonLine = `<div class="migration-comparison" style="color:${diffColor};">Без миграции: <strong>${result.baseProb}%</strong> → ${result.prob}% ${arrow}</div>`;
+      }
 
       facultyHtml += `<div class="result-card">
         <div class="result-percent" style="color:${color};">${result.prob}%</div>
         <div class="result-info">
           <div class="result-name">${esc(sp.name || "Без названия")}${targetTag}${appliedTag}</div>
           <div class="result-meta">Мест: ${result.competitive} · Выше тебя: ${result.peopleAbove} · ${statusLabel(result.status)}</div>
+          ${comparisonLine}
         </div>
       </div>`;
       facultyHasResults = true;

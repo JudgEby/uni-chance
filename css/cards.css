@@ -284,6 +284,12 @@
   color: var(--text);
 }
 
+.migration-comparison {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
 .migration-card h2 {
   font-size: 1.3rem;
   font-weight: 600;
