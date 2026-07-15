@@ -1,4 +1,4 @@
-import { state, save, moveSpecialty } from "../state.js";
+import { save, moveSpecialty } from "../state.js";
 
 export function bindFacultyEvents(fCard, faculty, onRender) {
   fCard.querySelector(".faculty-name").addEventListener("input", e => {

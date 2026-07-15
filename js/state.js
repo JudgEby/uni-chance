@@ -27,7 +27,7 @@ export function save() {
       scenario: state.scenario,
       idCounter
     }));
-  } catch (e) {}
+  } catch {}
 }
 
 export function findFaculty(specialtyId) {
@@ -71,7 +71,7 @@ const MIGRATIONS = {
         name,
         collapsed: false,
         specialties: specs.map(s => {
-          const { faculty, ...rest } = s;
+          const { ...rest } = s;
           return {
             ...rest,
             scoreDist: Array.isArray(rest.scoreDist) && rest.scoreDist.length === 57
@@ -118,5 +118,5 @@ export function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     loadFromObject(JSON.parse(raw));
-  } catch (e) {}
+  } catch {}
 }

@@ -1,5 +1,5 @@
 import { SCORE_RANGES } from "../constants.js";
-import { state, save } from "../state.js";
+import { state } from "../state.js";
 import { calcProbability, calcMigrationDist, calcWorstCaseMigrationDist } from "../calc.js";
 import { probabilityColor, statusLabel } from "../utils/ui.js";
 
@@ -16,7 +16,7 @@ export function syncCardToState(card, sp, faculty, allFaculties) {
   card.querySelector(".field-appsByComp").value = sp.appsByComp || "";
 
   renderDistInputs(card, sp);
-  renderCardResult(card, sp, faculty, allFaculties);
+  renderCardResult(card, sp, faculty);
   renderMoveDropdown(card, sp, faculty, allFaculties);
 }
 
@@ -58,7 +58,6 @@ export function renderDistInputs(card, sp) {
 
 function renderMoveDropdown(card, sp, faculty, allFaculties) {
   const wrapper = card.querySelector(".move-wrapper");
-  const btn = card.querySelector(".btn-move");
   const dropdown = card.querySelector(".move-dropdown");
 
   const otherFaculties = allFaculties.filter(f => f.id !== faculty.id);
@@ -74,7 +73,7 @@ function renderMoveDropdown(card, sp, faculty, allFaculties) {
   ).join("");
 }
 
-function renderCardResult(card, sp, faculty, allFaculties) {
+function renderCardResult(card, sp, faculty) {
   const container = card.querySelector(".specialty-result");
   if (state.userScore <= 0) {
     container.innerHTML = '<span style="color:var(--text-secondary);font-size:0.82rem;">Введите балл для расчёта</span>';
