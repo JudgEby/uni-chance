@@ -1,0 +1,41 @@
+@media (max-width: 640px) {
+  .specialty-title-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .specialty-name {
+    width: 100%;
+  }
+  .specialty-actions {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+  .btn-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  .fields-row {
+    flex-direction: column;
+  }
+  .field .input {
+    width: 100%;
+  }
+  .scenario-toggle {
+    flex-direction: column;
+  }
+  .faculty-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .faculty-header-left {
+    width: 100%;
+  }
+  .faculty-header-right {
+    justify-content: flex-end;
+  }
+  .move-dropdown {
+    right: auto;
+    left: 0;
+  }
+}

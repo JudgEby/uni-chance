@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Шансы поступления</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Шансы поступления</h1>
+      <p class="subtitle">Расчёт вероятности поступления на основе данных о поданных заявлениях</p>
+      <div class="io-buttons">
+        <button id="btnExport" class="btn btn-small" title="Сохранить данные в файл">Экспорт</button>
+        <button id="btnImport" class="btn btn-small" title="Загрузить данные из файла">Импорт</button>
+        <input type="file" id="fileInput" accept=".json" style="display:none;">
+      </div>
+    </header>
+
+    <section class="card score-input-card">
+      <label for="userScore" class="label">Твой балл</label>
+      <input type="number" id="userScore" class="score-input" placeholder="0" min="0" max="400">
+    </section>
+
+    <section class="specialties-section">
+      <div class="section-header">
+        <h2>Факультеты</h2>
+        <button id="addFaculty" class="btn btn-primary">+ Факультет</button>
+      </div>
+      <div id="facultiesList" class="faculties-list"></div>
+    </section>
+
+    <section class="card migration-card">
+      <h2>Миграция абитуриентов</h2>
+      <p class="migration-desc">% абитуриентов, не прошедших на других специальностях <strong>факультета</strong>, которые переподадут на твою</p>
+      <div class="migration-controls">
+        <input type="range" id="migrationSlider" min="0" max="100" value="0" class="slider">
+        <span id="migrationValue" class="slider-value">0%</span>
+      </div>
+      <div class="scenario-toggle">
+        <button class="scenario-btn active" data-scenario="current">Текущий расчёт</button>
+        <button class="scenario-btn" data-scenario="best">Лучший сценарий</button>
+        <button class="scenario-btn" data-scenario="worst">Худший сценарий</button>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <h2>Результаты</h2>
+      <div id="resultsList" class="results-list"></div>
+    </section>
+  </div>
+
+  <template id="facultyTemplate">
+    <div class="card faculty-card" data-faculty-id="">
+      <div class="faculty-header">
+        <div class="faculty-header-left">
+          <button class="btn-collapse" title="Свернуть/развернуть">
+            <span class="collapse-icon">&#9660;</span>
+          </button>
+          <input type="text" class="input faculty-name" placeholder="Название факультета">
+        </div>
+        <div class="faculty-header-right">
+          <button class="btn btn-small btn-add-specialty">+ Специальность</button>
+          <button class="btn-remove" title="Удалить факультет">&times;</button>
+        </div>
+      </div>
+      <div class="faculty-body">
+        <div class="faculty-specialties"></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="specialtyTemplate">
+    <div class="card specialty-card" data-id="">
+      <div class="specialty-header">
+        <div class="specialty-title-row">
+          <input type="text" class="input specialty-name" placeholder="Специальность">
+          <label class="target-checkbox">
+            <input type="checkbox" class="is-target"> Моя
+          </label>
+          <div class="specialty-actions">
+            <div class="move-wrapper">
+              <button class="btn btn-small btn-move" title="Перенести">Перенести</button>
+              <div class="move-dropdown" style="display:none;"></div>
+            </div>
+            <button class="btn-remove" title="Удалить">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="specialty-fields">
+        <div class="field-group">
+          <h3>План приёма</h3>
+          <div class="fields-row">
+            <div class="field">
+              <label>Бюджет (всего)</label>
+              <input type="number" class="input field-plan" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Целевики (в плане)</label>
+              <input type="number" class="input field-planTarget" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Платное</label>
+              <input type="number" class="input field-planPaid" min="0" value="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <h3>Заявления</h3>
+          <div class="fields-row">
+            <div class="field">
+              <label>Всего</label>
+              <input type="number" class="input field-appsTotal" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Целевики</label>
+              <input type="number" class="input field-appsTarget" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Без экзаменов</label>
+              <input type="number" class="input field-appsNoExam" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Вне конкурса</label>
+              <input type="number" class="input field-appsOutOfComp" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>По конкурсу</label>
+              <input type="number" class="input field-appsByComp" min="0" value="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="distribution-header">
+            <h3>Распределение баллов</h3>
+            <button class="btn btn-small btn-toggle-dist">Показать таблицу</button>
+          </div>
+          <div class="score-distribution" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="specialty-result"></div>
+    </div>
+  </template>
+
+  <dialog id="confirmDeleteDialog">
+    <div class="dialog-content">
+      <p class="dialog-text" id="dialogText">Удалить специальность?</p>
+      <div class="dialog-actions">
+        <button class="btn btn-small" id="dialogCancel">Отмена</button>
+        <button class="btn btn-danger" id="dialogConfirm">Удалить</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
