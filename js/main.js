@@ -43,17 +43,17 @@ function renderTabs() {
     nameSpan.textContent = p.name;
     tab.appendChild(nameSpan);
 
-    if (state.profiles.length > 1) {
-      const editBtn = document.createElement("button");
-      editBtn.className = "tab-edit";
-      editBtn.title = "Переименовать";
-      editBtn.textContent = "\u270E";
-      editBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        startRename(tab, nameSpan, p);
-      });
-      tab.appendChild(editBtn);
+    const editBtn = document.createElement("button");
+    editBtn.className = "tab-edit";
+    editBtn.title = "Переименовать";
+    editBtn.textContent = "\u270E";
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      startRename(tab, nameSpan, p);
+    });
+    tab.appendChild(editBtn);
 
+    if (state.profiles.length > 1) {
       const delBtn = document.createElement("button");
       delBtn.className = "tab-delete";
       delBtn.title = "Удалить";
